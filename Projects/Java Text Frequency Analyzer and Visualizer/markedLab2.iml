@@ -1,0 +1,60 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class TextStatisticsDisplay extends JComponent {
+    private TextStatistics textStat;
+
+    public TextStatisticsDisplay(TextStatistics textStat) {
+        this.textStat = textStat;
+    }
+    //constructore that initializes object of textstatistics
+
+    @Override
+    //method to paint the component
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        int h;
+        int w = 35;
+        //this is the width of the each bar shown in the graph
+        int barY;
+        int barX;
+        String valueString;
+
+        g.setColor(Color.BLUE);
+        //set color for letters
+        //drawing bars for letters
+        for (int a = 0; a < 26; a++) {
+            h = textStat.getLetterFrequency(a) * 5;
+            //this calculates the height of the bar proportional to the frequency
+            barY = getHeight() - h;
+            //the y axis coordinates of the top of the bar
+            barX = a * w;
+            //the x axis coordinates of the bar
+
+            valueString = (char) (a + 'a') + " : " + textStat.getLetterFrequency(a);
+            //this creates the string representation of the letter frequency and the letter
+            g.fillRect(barX, barY, w, h);
+            //to represent the bar, the filled rectangle drawing is made in this
+            g.drawString(valueString, barX + 5, barY - 10);
+            //string is drawn on top of the bar to display the frequency
+        }
+
+        g.setColor(Color.RED);
+        //set color for digits
+        //this part draws the bars for the digits
+        for (int a = 0; a < 10; a++) {
+            h = textStat.getDigitFrequency(a) * 5;
+            //this calculates the height of the bar proportional to the frequency
+            barY = getHeight() - h;
+            //the y axis coordinates of the top of the bar
+            barX = (a + 26) * w;
+            //the x axis of the bar which is shifted to the right so it is shown after the entire graph or else it will overlap
+
+            valueString = (a) + " : " + textStat.getDigitFrequency(a);
+            //this creates the string representation of the digit frequency and the digit
+            g.fillRect(barX, barY, w, h);
+            g.drawString(valueString, barX + 5, barY - 10);
+            //this draws the string above the bar to display the frequency
+        }
+    }
+}

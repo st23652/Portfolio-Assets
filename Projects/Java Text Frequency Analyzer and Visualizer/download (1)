@@ -1,0 +1,62 @@
+public class TextStatistics {
+    //private variable is used to make sure that the variable is never negative
+    //array is used to store frequencies of each letter and number digit
+    private int[] letterFrequencies = new int[26];
+    //there are 26 alphabets and the variable is assigned (indices 0-25)
+    private int[] digitFrequencies = new int[10];
+    //there are 10 numbers from 0-9
+
+    public void incrementLetterFrequency(int a) {
+        letterFrequencies[a]++;
+        //this causes an increment to the frequency of a specific letter
+    }
+
+    public int getLetterFrequency(int a) {
+        return letterFrequencies[a];
+        //over here the frequency is calculated and returned for specific letters
+    }
+
+    public void incrementDigitFrequency(int a) {
+        digitFrequencies[a]++;
+        //this causes an increment to the frequency of a specific number
+    }
+
+    public int getDigitFrequency(int a) {
+        return digitFrequencies[a];
+        //over here the frequency is calculated and returned for specific numbers
+    }
+
+    @Override
+    //overriding the toString() method to provide a string representation of the statistics
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        //appending letter frequencies to the string
+        for (char a = 'a'; a <= 'z'; a++) {
+            sb.append(a).append(" : ").append(letterFrequencies[a - 'a']);
+            if (a < 'z') {
+                sb.append(", ");
+                //the comma is added if it is not the last letter
+            } else {
+                sb.append("\n");
+                //the newline character is added if it is the last letter
+            }
+        }
+
+        //appending digit frequencies to the string
+        for (int a = 0; a < 10; a++) {
+            sb.append(a).append(" : ").append(digitFrequencies[a]);
+            if (a < 9) {
+                sb.append(", ");
+                //the comma is added if it is not the last digit
+            } else {
+                //removing the trailing comma for the last digit entry
+                int length = sb.length();
+                sb.delete(length - 2, length);
+            }
+        }
+
+        return sb.toString();
+        //returning the constructed string
+    }
+}
