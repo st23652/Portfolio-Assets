@@ -1,0 +1,14 @@
+public class Professor extends Lecturer {
+    private double bonus;
+    public Professor(String name, double monthlySalary, String module, double bonus){
+        //has to be below the constructor and has the list of stuff from inheritence
+        super(name, monthlySalary, module);
+        this.bonus = bonus;
+    }
+    //overriding the inheritence to get annual salary
+    @Override
+    public double getAnnualSalary(){
+        // using 2 super to get 2 functions inherited
+        return super.rounded(super.getAnnualSalary() + bonus);
+    }
+}

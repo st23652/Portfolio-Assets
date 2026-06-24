@@ -1,0 +1,13 @@
+import java.lang.Math;
+public class MainExercise2 {
+    public static void main(String[] args) {
+        Lecturer lecturer = new Lecturer("Ada", 3565.49, "CE123");
+        //printf is used to print in format
+        //%s is for string format
+        //%.2f is for the decimal points
+        //lecturer.... is for recalling the function
+        System.out.printf("%s %s %.2f\n", lecturer.getName(), lecturer.getModule(), lecturer.getAnnualSalary());
+        Professor teacher = new Professor("Archimedes", 4470.62, "MA456", 1000 * Math.PI);
+        System.out.printf("%s %s %.2f\n", teacher.getName(), teacher.getModule(), teacher.getAnnualSalary());
+    }
+}

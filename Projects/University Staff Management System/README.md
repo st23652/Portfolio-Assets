@@ -1,0 +1,5 @@
+Exercise 1: Academic Staff Hierarchy
+I created a base Employee class and extended it into specialized subclasses (Lecturer, Professor), each overriding core methods to accurately represent distinct academic roles and data. A main execution class was used to instantiate these profiles to validate constructor behavior and state management. This exercise deepened my understanding of foundational object-oriented principles, including inheritance, encapsulation, and method overriding.
+
+Exercise 2: Polymorphic Payroll System
+I developed a program that grouped various staff types into a unified collection, allowing for batch operations such as processing university payrolls and generating comprehensive staff reports. The system utilized dynamic method dispatch to ensure the correct, specialized behavior was automatically executed for each individual staff member in the array. This task improved my practical application of polymorphism, Java collections, and scalable system design.
