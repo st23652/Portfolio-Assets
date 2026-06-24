@@ -1,0 +1,27 @@
+import javax.swing.*;
+import java.awt.Dimension;
+
+//main class where the GUI is initialized and run
+public class MyMain {
+    public static void main(String[] args) {
+        //the JFrame window is created
+        JFrame frame = new JFrame();
+        //an instance is created of MyComponent
+        //MyComponent is a custom class that extends JComponent and contains the logic for handling events and displaying content
+        MyComponent component = new MyComponent();
+        //this the added custom component to the frame
+        //the add() method is used to add the MyComponent instance to the JFrame
+        frame.add(component);
+        //this is a set default close operation when the window is closed, the program stops running
+        //JFrame.EXIT_ON_CLOSE is a constant that specifies that the application should terminate when the window is closed
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //this is the size of the frame set
+        //the setSize() method is used to set the size of the JFrame
+        //it takes a Dimension object as a parameter, which specifies the width and height of the window
+        frame.setSize(new Dimension(400, 400));
+        //this line makes sure that the frame is visible to coder
+        //the setVisible() method is used to make the JFrame visible on the screen
+        //by passing true as a parameter, the window becomes visible to the user
+        frame.setVisible(true);
+    }
+}
