@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="ShapeManager:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2ba72e7e-0deb-41aa-b116-d28723b5fc0f" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2ooLIJ9cMaWC6Uy9gks16xKoEoU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainFrame.executor": "Debug",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Syed Tariq Shah/IdeaProjects/ShapeManager/src/Rectangle/RectangleShape.txt",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Java",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-openjdk-21.0.2-f644763e9732-c0c073db" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2ba72e7e-0deb-41aa-b116-d28723b5fc0f" name="Changes" comment="" />
+      <created>1731530903220</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731530903220</updated>
+      <workItem from="1731530904152" duration="520000" />
+      <workItem from="1731531519625" duration="23000" />
+      <workItem from="1731531571832" duration="324000" />
+      <workItem from="1731532176036" duration="6000" />
+      <workItem from="1731581724305" duration="4339000" />
+      <workItem from="1731594030199" duration="1207000" />
+      <workItem from="1731596240123" duration="319000" />
+      <workItem from="1731596803036" duration="389000" />
+      <workItem from="1731597327407" duration="419000" />
+      <workItem from="1731597883742" duration="757000" />
+      <workItem from="1731598839058" duration="809000" />
+      <workItem from="1731601496546" duration="99000" />
+      <workItem from="1732843091872" duration="5656000" />
+      <workItem from="1733235444815" duration="3911000" />
+      <workItem from="1733331490806" duration="199000" />
+      <workItem from="1733331695156" duration="3972000" />
+      <workItem from="1733335914950" duration="3000" />
+      <workItem from="1733335928596" duration="4833000" />
+      <workItem from="1733360828914" duration="12491000" />
+      <workItem from="1733756733099" duration="524000" />
+      <workItem from="1733757317991" duration="17000" />
+      <workItem from="1733757367973" duration="11054000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
