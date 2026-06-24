@@ -4,7 +4,7 @@ from email.mime.text import MIMEText
 smtp_server = 'smtp.gmail.com'
 smtp_port = 587
 smtp_username = '5688sneha8865@gmail.com'
-smtp_password = 'happy@2577' 
+smtp_password = 'password' 
 
 from_mail = smtp_username
 to_mail = 'htre@eim.ae'
