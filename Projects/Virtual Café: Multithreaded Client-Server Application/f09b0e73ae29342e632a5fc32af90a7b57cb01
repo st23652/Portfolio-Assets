@@ -1,0 +1,12 @@
+0000000000000000000000000000000000000000 933c53711bf07dd7bac364760ca41146b678e3d0 Sneha Tandon <st23652@essex.ac.uk> 1762098435 +0000	commit (initial): creating README.md & organizing the files
+933c53711bf07dd7bac364760ca41146b678e3d0 a03b77648ec26cd543177e104a5fcdedfbe9e1a9 Sneha Tandon <st23652@essex.ac.uk> 1762098790 +0000	commit: rearranging the files
+a03b77648ec26cd543177e104a5fcdedfbe9e1a9 7fc8e1059bf6b8135b6e801cd321e9114bbf647b Sneha Tandon <st23652@essex.ac.uk> 1763662840 +0000	commit: working progress
+7fc8e1059bf6b8135b6e801cd321e9114bbf647b e024a85860cfa3c49869a5cb76b1981852e664e9 Sneha Tandon <st23652@essex.ac.uk> 1763662904 +0000	commit: feat: Implement the core Virtual Cafe application with customer, barista, order management, brewing logic, and associated tests.
+e024a85860cfa3c49869a5cb76b1981852e664e9 849159a2625bc478ff7e8fa4ca778e307888cae7 Sneha Tandon <st23652@essex.ac.uk> 1763732747 +0000	commit: fixing bugs
+849159a2625bc478ff7e8fa4ca778e307888cae7 e7eb852c9660bbbcf00fa0a93956fbe8d7e745c9 Sneha Tandon <st23652@essex.ac.uk> 1763732780 +0000	commit: fixing bugs
+e7eb852c9660bbbcf00fa0a93956fbe8d7e745c9 44d23cbf8d75963c1ada58767408f67bda1fed53 Sneha Tandon <st23652@essex.ac.uk> 1763915014 +0000	commit: final system commit
+44d23cbf8d75963c1ada58767408f67bda1fed53 375b4c5742b144ed6d28fef29e0cd7e398814f03 Sneha Tandon <st23652@essex.ac.uk> 1763981344 +0000	commit: final system commit with readme
+375b4c5742b144ed6d28fef29e0cd7e398814f03 df8c9b9745fa756eee49d1ed018b89f564d71c8c Sneha Tandon <st23652@essex.ac.uk> 1763985996 +0000	commit: final changes
+df8c9b9745fa756eee49d1ed018b89f564d71c8c 307c8070b36e59873126ffaadc25f0fdb28a9ccd Sneha Tandon <st23652@essex.ac.uk> 1763986029 +0000	commit (amend): final changes
+307c8070b36e59873126ffaadc25f0fdb28a9ccd 5d7342a373dcd71310d43262bd68508d0b0cd5cb Sneha Tandon <st23652@essex.ac.uk> 1764098975 +0000	commit (amend): final changes
+5d7342a373dcd71310d43262bd68508d0b0cd5cb 1d8e21bb3259b88e330ba1b6b6c8c7c35276a7b7 Sneha Tandon <st23652@essex.ac.uk> 1764099543 +0000	commit (amend): final changes

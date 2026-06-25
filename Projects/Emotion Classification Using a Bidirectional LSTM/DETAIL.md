@@ -1,0 +1,15 @@
+# Emotion Classification Using a Bidirectional LSTM
+
+## About the Project
+This project is a deep learning-based Natural Language Processing (NLP) system designed to detect and categorize human emotions from short, informal English texts, specifically Twitter messages. The goal is to build a supervised text classifier capable of analyzing a sentence and predicting which of six core emotional states it represents: *anger, fear, joy, love, sadness,* or *surprise*. 
+
+Because human emotions often share overlapping vocabulary and nuanced semantics (for example, the subtle differences between "joy" and "love"), simple keyword matching is insufficient. To solve this, the project leverages a Bidirectional Long Short-Term Memory (BiLSTM) network, which is uniquely suited to understand the sequential context of a sentence by processing it from both left-to-right and right-to-left. 
+
+## What I Am Doing in This Project
+In this repository, I am designing, implementing, and evaluating an end-to-end machine learning pipeline from scratch. My specific technical contributions include:
+
+* **Custom NLP Data Preprocessing:** I am building a robust text-cleaning pipeline that uses regular expressions to strip out noise like URLs, mentions, and non-alphabetic characters. I then use NLTK to apply tokenization, stop-word removal, and lemmatization to extract the meaningful root words from the raw text.
+* **Exploratory Data Analysis (EDA) & Feature Engineering:** I am analyzing the dataset to understand label imbalances and plotting token length distributions. This analysis directly informs my sequence modeling decisions, such as establishing a maximum sequence length of 50 tokens and building a custom vocabulary dictionary that filters out highly infrequent words.
+* **Deep Learning Architecture Design:** I am constructing a custom neural network using PyTorch. The model maps the preprocessed tokens to 100-dimensional learned word embeddings, passes them through a 2-layer BiLSTM with a hidden size of 128, and uses a fully connected layer to output probabilities for the 6 emotion classes.
+* **Model Training & Optimization:** I am implementing the training loop using cross-entropy loss and the Adam optimizer. To ensure stable and efficient training, I am applying gradient clipping (to prevent exploding gradients), utilizing a 0.5 dropout rate for regularization, and implementing an early stopping mechanism based on validation accuracy to prevent overfitting.
+* **Rigorous Evaluation & Visualization:** Because the dataset has class imbalances, I am evaluating the model using advanced metrics beyond standard accuracy, including Macro and Weighted F1 scores, Balanced Accuracy, and the Matthews Correlation Coefficient (MCC). I am also generating custom Matplotlib visualizations—such as training/validation loss curves and confusion matrices—to critically analyze where the model succeeds and where it struggles with semantically similar emotions.

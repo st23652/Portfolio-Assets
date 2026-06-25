@@ -1,0 +1,57 @@
+Overall Perplexity: 954639.7700
+Overall Cross-Entropy: 13.7691
+Total Log-Probability: -3166.8905
+Total Tokens (N): 230
+
+INDIVIDUAL SENTENCE METRICS
+
+Sentence 1: you are the projections associated with radiation counters , refused to let well enough . </s> </s> </s> </s> </s> </s> </s>
+  Probability: 1.72190e-135
+  LogProb: -310.30556
+  Tokens (incl </s>): 23
+
+Sentence 2: you are an income tax on payments he received from 35 of our hospitals . </s> </s> </s> </s> </s> </s> </s>
+  Probability: 2.86706e-138
+  LogProb: -316.70346
+  Tokens (incl </s>): 23
+
+Sentence 3: you are welcome to come , she soothed me , murmuring endearments . </s> </s> </s> </s> </s> </s> </s> </s> </s>
+  Probability: 2.48537e-139
+  LogProb: -319.14891
+  Tokens (incl </s>): 23
+
+Sentence 4: you are considering here relatively small manufacturers , and their concerted action only psychologically organized . </s> </s> </s> </s> </s> </s>
+  Probability: 1.14252e-136
+  LogProb: -313.01834
+  Tokens (incl </s>): 23
+
+Sentence 5: you are considering a part-time basis , is to say that he makes his irritation in this very significant result , dramatically
+  Probability: 9.35975e-138
+  LogProb: -315.52032
+  Tokens (incl </s>): 23
+
+Sentence 6: you are nothing much to the relationship that he is truly odd and ironic explorer of the need . </s> </s> </s>
+  Probability: 6.10164e-133
+  LogProb: -304.43526
+  Tokens (incl </s>): 23
+
+Sentence 7: you are supplying the family buttons have fallen off the field of extra-sensory perception and interpersonal behavior the discussion of the educator
+  Probability: 8.92669e-140
+  LogProb: -320.17287
+  Tokens (incl </s>): 23
+
+Sentence 8: you are finished , only 8 per cent , or 800,000 ) which act as substitutes for family life stages , first
+  Probability: 6.50274e-141
+  LogProb: -322.79227
+  Tokens (incl </s>): 23
+
+Sentence 9: you are conscientious , hard to believe in your field been forecast as a dealer who has been a favorite natural playground
+  Probability: 3.25860e-139
+  LogProb: -318.87803
+  Tokens (incl </s>): 23
+
+Sentence 10: you are just assembled by putting butter in a cavity in the alveoli , continues to increase exports of certain injunctions and
+  Probability: 2.86208e-142
+  LogProb: -325.91554
+  Tokens (incl </s>): 23
+
