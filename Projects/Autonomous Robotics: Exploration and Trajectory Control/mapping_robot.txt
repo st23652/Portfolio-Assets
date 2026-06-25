@@ -1,0 +1,145 @@
+import rclpy
+import os
+import math
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
+from sensor_msgs.msg import LaserScan
+import csv
+import random
+import time
+
+class RandomExplorer(Node):
+    def __init__(self):
+	#initializing the ROS node
+        super().__init__('random_explorer')
+
+	# creating publisher for velocity commands
+        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+	
+	# subscribing to laser scan to detect obstacles
+        self.laser_sub = self.create_subscription(LaserScan, '/scan', self.laser_callback, 10)
+	
+	# subscribing to odometry data to track the position of the robot
+        self.odom_sub = self.create_subscription(Odometry, '/odom', self.odom_callback, 10)
+
+	# indication if the navigation system is active
+        self.navigator_active = False
+        self.obstacle_detected = False
+
+	# variables storing robots current orientation and position
+        self.current_x = 0.0
+        self.current_y = 0.0
+        self.current_yaw = 0.0
+
+	# the csv file for logging the path of the robot when mapping
+        self.csv_file = 'mapping_robot.csv'
+        self.write_header()
+    
+    # the method to create the csv file and write the header of columns
+    def write_header(self):
+        with open(self.csv_file, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["x", "y"])  
+
+    # method to do changes of the current position to the csv file
+    def save_point(self, x, y, yaw):
+        with open(self.csv_file, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([x, y])  
+
+    # to process the laser scan data, a callback method takes place to check if the obstacle is too close 
+    def laser_callback(self, msg):
+        min_range = min(msg.ranges)
+
+        if min_range <= 0.2:  
+            self.obstacle_detected = True
+            self.get_logger().info("Obstacle detected!")
+        else:
+            self.obstacle_detected = False
+
+    # to process the odometry data, a callback method takes place to extract position data from the odometry message and logging current position of robot to the csv file
+    def odom_callback(self, msg):
+        self.current_x = msg.pose.pose.position.x
+        self.current_y = msg.pose.pose.position.y
+        orientation_q = msg.pose.pose.orientation
+        _, _, self.current_yaw = self.euler_from_quaternion(
+            orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w
+        )
+        self.save_point(self.current_x, self.current_y, self.current_yaw)
+
+    # the helper method to convert quaternion orientation to euler angles
+    def euler_from_quaternion(self, x, y, z, w):
+        t3 = 2.0 * (w * z + x * y)
+        t4 = 1.0 - 2.0 * (y * y + z * z)
+        yaw = math.atan2(t3, t4)
+        return 0.0, 0.0, yaw
+
+    # this method shows how to handle obstacle avoidance behavior
+    def avoid_obstacle(self):
+        self.get_logger().info("Avoiding obstacle...")
+
+	# these protocols help handling when obstacle is detected
+	# step ->  moving back 0.2 meters from the obstacle
+        twist = Twist()
+        twist.linear.x = -0.2  
+        self.cmd_vel_pub.publish(twist)
+        time.sleep(2.5)  
+
+     	# step 2 -> stopping the robot from backing up
+        twist.linear.x = 0.0
+        self.cmd_vel_pub.publish(twist)
+       
+   	# step 3 -> turning to find a new direction to continue
+        twist.angular.z = -0.5
+        self.cmd_vel_pub.publish(twist)
+        time.sleep(7.5)
+
+     	# step 4 -> stop the turning 
+        twist.angular.z = 0.0
+        self.cmd_vel_pub.publish(twist)
+
+    # the method to make the robot move forward
+    def move_forward(self):
+        twist = Twist()
+        twist.linear.x = 0.2  
+        self.cmd_vel_pub.publish(twist)
+
+    # the main control loop for random exploration
+    def perform_random_walk(self):
+        while rclpy.ok():
+            if self.obstacle_detected:
+		
+		# if an obstacle is detected, it avoids the obstacle
+                self.avoid_obstacle()  
+            else:
+
+		# continuing moving forward
+                self.move_forward()
+
+	    # randomly deciding to change the direction
+            if random.random() < 0.05:
+                self.turn_randomly()
+
+	    # any of the pending ROS callbacks are processed once per loop
+            rclpy.spin_once(self)
+
+    # this method makes the robot turn in a random direction
+    def turn_randomly(self):
+        twist = Twist()
+        twist.angular.z = random.choice([-0.5, 0.5])
+        self.cmd_vel_pub.publish(twist)
+
+# the main function - the entry point for the ROS node, creating an instance of the node, & starting the random exploration
+def main():
+    rclpy.init()
+    explorer = RandomExplorer()
+    explorer.perform_random_walk()
+
+    # cleaning up the ROS resources when done
+    explorer.destroy_node()
+    rclpy.shutdown()
+
+# execution of the main function
+if __name__ == '__main__':
+    main()

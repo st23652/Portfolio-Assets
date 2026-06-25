@@ -1,0 +1,298 @@
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
+import math
+import csv
+import time
+import os
+from pathlib import Path
+
+class SquareTracer(Node):
+    def __init__(self):
+        super().__init__('square_tracer')
+
+	# creating ROS publisher for velocity commands
+        self.cmd_vel_publisher = self.create_publisher(Twist, 'cmd_vel', 10)
+
+	# subscribing to the odometry data
+        self.odom_subscriber = self.create_subscription(Odometry, 'odom', self.odom_callback, 10)
+
+	# controlled loop timer 
+        self.timer = self.create_timer(0.02, self.control_loop)  
+   
+	# the current position and orientation of the robot
+        self.current_x = 0.0
+        self.current_y = 0.0
+        self.current_yaw = 0.0
+        self.last_time = time.time()
+       
+     	# the movement parameters of the square with tolerance
+        self.side_length = 1000.0  
+        self.position_tolerance = 20.0  
+        self.angle_tolerance = 0.03  
+       
+   	# state variables 
+        self.state = 'init'  
+        self.corner_idx = 0
+        self.stabilizing_timer = 0.0
+        self.stabilizing_duration = 0.5  
+       
+       	# defining square corner coordinates
+        self.corners = [
+            (1000.0, 0.0),  
+            (1000.0, 1000.0),
+            (0.0, 1000.0),    
+            (0.0, 0.0)        
+        ]
+       
+	# defining target angles in radians for each segment
+        self.target_angles = [
+            0.0,              
+            math.pi/2,        
+            math.pi,        
+            -math.pi/2        
+        ]
+       
+	# the set linear & angular speeds
+        self.max_linear_speed = 0.2
+        self.max_angular_speed = 0.25  
+	
+	# setting up the csv file for logging position data
+        self.home_dir = str(Path.home())
+        self.csv_file = os.path.join(self.home_dir, f'my_robot{self.max_linear_speed}.csv')
+        self.write_header()
+        self.get_logger().info(f'Saving data to: {self.csv_file}')
+       
+	# PID controller gains of linear & angular motion
+        self.linear_kp = 0.0005  
+        self.linear_ki = 0.00001
+        self.angular_kp = 1.5    
+        self.angular_ki = 0.01    
+       
+        self.linear_error_sum = 0.0
+        self.angular_error_sum = 0.0
+       
+       	# the completion tracking of square and setting the number of loops the square needs to take place
+        self.square_completions = 0
+        self.max_completions = 1  
+       
+        self.get_logger().info('Square Tracer Node initialized')
+   
+    # writing the csv file column headers with fallback location in the case of permission issues
+    def write_header(self):
+        try:
+            with open(self.csv_file, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(["x_mm", "y_mm"])
+            self.get_logger().info(f'Successfully created data file at {self.csv_file}')
+        except PermissionError:
+           
+            self.csv_file = '/tmp/my_robot.csv'
+            with open(self.csv_file, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(["x_mm", "y_mm"])
+            self.get_logger().info(f'Using fallback data file at {self.csv_file}')
+   
+    # saving the current position of the robot to the csv file, converting m to mm
+    def save_point(self):
+        try:
+            with open(self.csv_file, mode='a', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow([
+                    self.current_x * 1000.0,  
+                    self.current_y * 1000.0  
+                ])
+        except Exception as e:
+            self.get_logger().error(f'Error writing to CSV: {e}')
+   
+    # odometry callback is used to update the robots position & orientation
+    def odom_callback(self, msg):
+        self.current_x = msg.pose.pose.position.x
+        self.current_y = msg.pose.pose.position.y
+       
+        orientation_q = msg.pose.pose.orientation
+        _, _, self.current_yaw = self.euler_from_quaternion(
+            orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w
+        )
+       
+        self.current_yaw = self.normalize_angle(self.current_yaw)
+       
+        self.save_point()
+   
+    # converting quaternion to euler angles
+    def euler_from_quaternion(self, x, y, z, w):
+        t3 = 2.0 * (w * z + x * y)
+        t4 = 1.0 - 2.0 * (y * y + z * z)
+        yaw = math.atan2(t3, t4)
+        return 0.0, 0.0, yaw
+   
+    # normalizing the angle to the range of pi
+    def normalize_angle(self, angle):
+        while angle > math.pi:
+            angle -= 2.0 * math.pi
+        while angle < -math.pi:
+            angle += 2.0 * math.pi
+        return angle
+   
+    # calculating distance to target corner
+    def get_distance_to_target(self):
+        target_x, target_y = self.corners[self.corner_idx]
+        dx = target_x - (self.current_x * 1000.0)
+        dy = target_y - (self.current_y * 1000.0)  
+        return math.sqrt(dx**2 + dy**2)
+   
+    # calculating the heading angle to the target
+    def get_heading_to_target(self):
+        target_x, target_y = self.corners[self.corner_idx]
+        dx = target_x - (self.current_x * 1000.0)  
+        dy = target_y - (self.current_y * 1000.0)
+        return math.atan2(dy, dx)
+   
+    # computing the difference in angle to the target
+    def get_angle_difference(self):
+        target_angle = self.target_angles[self.corner_idx]
+        diff = self.normalize_angle(target_angle - self.current_yaw)
+        return diff
+    
+    # calculating the angle difference at the next turn 
+    def get_turn_angle_difference(self):
+        next_idx = (self.corner_idx + 1) % 4
+        target_angle = self.target_angles[next_idx]
+        diff = self.normalize_angle(target_angle - self.current_yaw)
+        return diff, next_idx
+   
+    # resetting the PID controller errors before entering the next state
+    def reset_pid_errors(self):
+   
+        self.linear_error_sum = 0.0
+        self.angular_error_sum = 0.0
+   
+    # the main control loop - calculating the time difference, creating a new twist message
+    def control_loop(self):
+        current_time = time.time()
+        dt = current_time - self.last_time
+        self.last_time = current_time
+       
+        twist = Twist()
+
+	# finite state machine handling different stages of square tracing
+        if self.state == 'init':
+            if self.stabilizing_timer < self.stabilizing_duration:
+                self.stabilizing_timer += dt
+            else:
+                self.stabilizing_timer = 0.0
+                self.state = 'move_forward'
+                self.reset_pid_errors()
+                self.get_logger().info('Starting square trajectory')
+       
+        elif self.state == 'move_forward':
+            distance = self.get_distance_to_target()
+           
+	    # using PID to control linear motion
+            if distance > self.position_tolerance:
+                self.linear_error_sum += distance * dt
+                self.linear_error_sum = min(self.linear_error_sum, 1000.0)  
+               
+                linear_speed = (self.linear_kp * distance + self.linear_ki * self.linear_error_sum)
+                linear_speed = min(self.max_linear_speed, linear_speed)
+                twist.linear.x = linear_speed
+               
+         	# using PID to control angular motion to maintain
+                angle_error = self.get_angle_difference()
+                self.angular_error_sum += angle_error * dt
+                self.angular_error_sum = min(max(self.angular_error_sum, -2.0), 2.0)
+               
+                angular_speed = (self.angular_kp * angle_error + self.angular_ki * self.angular_error_sum)
+                angular_speed = min(max(angular_speed, -self.max_angular_speed), self.max_angular_speed)
+                twist.angular.z = angular_speed
+               
+                self.get_logger().debug(f'Moving to corner {self.corner_idx}, distance: {distance:.2f} mm')
+            else:
+                # when at the corner, the robot will stop and stabilize
+                twist.linear.x = 0.0
+                twist.angular.z = 0.0
+                self.state = 'stabilize'
+                self.stabilizing_timer = 0.0
+                self.get_logger().info(f'Reached corner {self.corner_idx} at ({self.current_x:.2f}, {self.current_y:.2f})')
+       
+        elif self.state == 'stabilize':
+           
+            if self.stabilizing_timer < self.stabilizing_duration:
+                self.stabilizing_timer += dt
+            else:
+                self.stabilizing_timer = 0.0
+                self.state = 'turn'
+                self.reset_pid_errors()
+                self.get_logger().info(f'Stabilized at corner {self.corner_idx}, beginning turn')
+       
+        elif self.state == 'turn':
+       
+            angle_diff, next_idx = self.get_turn_angle_difference()
+           
+            if abs(angle_diff) > self.angle_tolerance:
+               
+                self.angular_error_sum += angle_diff * dt
+                self.angular_error_sum = min(max(self.angular_error_sum, -2.0), 2.0)
+               
+                angular_speed = (self.angular_kp * angle_diff + self.angular_ki * self.angular_error_sum)
+                angular_speed = min(max(angular_speed, -self.max_angular_speed), self.max_angular_speed)
+                twist.angular.z = angular_speed
+                self.get_logger().debug(f'Turning toward segment {next_idx}, angle diff: {math.degrees(angle_diff):.2f} degrees')
+            else:
+               
+                twist.angular.z = 0.0
+                self.state = 'post_turn_stabilize'
+                self.stabilizing_timer = 0.0
+                self.corner_idx = next_idx
+                self.get_logger().info(f'Completed turn, now oriented toward corner {self.corner_idx}')
+       
+        elif self.state == 'post_turn_stabilize':
+           
+            if self.stabilizing_timer < self.stabilizing_duration:
+                self.stabilizing_timer += dt
+            else:
+                self.stabilizing_timer = 0.0
+                self.state = 'move_forward'
+                self.reset_pid_errors()
+                self.get_logger().info(f'Stabilized after turn, moving to corner {self.corner_idx}')
+                
+		# checking if the square is completed, this is done by tracing
+                if self.corner_idx == 0:
+                    self.square_completions += 1
+                    self.get_logger().info(f'Completed square trajectory! (Loop {self.square_completions}/{self.max_completions})')
+                    
+		    # checking if all requested for square is complated
+                    if self.square_completions >= self.max_completions:
+                        self.state = 'finished'
+                        self.get_logger().info('Finished all requested square traversals')
+       
+        elif self.state == 'finished':
+            twist.linear.x = 0.0
+            twist.angular.z = 0.0
+       
+	# publishing the calculated velocity commands to the robot
+        self.cmd_vel_publisher.publish(twist)
+
+# the main function where initialization of ROS client library and creating an instance of the SquareTracer node
+def main(args=None):
+    rclpy.init(args=args)
+    square_tracer = SquareTracer()
+   
+    try:
+        rclpy.spin(square_tracer)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        stop_cmd = Twist()
+        square_tracer.cmd_vel_publisher.publish(stop_cmd)
+        time.sleep(0.5)
+        square_tracer.cmd_vel_publisher.publish(stop_cmd)  
+        square_tracer.get_logger().info('Stopping robot and shutting down node')
+	# cleaning up ROS resources
+        square_tracer.destroy_node()
+        rclpy.shutdown()
+
+# executing the main function
+if __name__ == '__main__':
+    main()
